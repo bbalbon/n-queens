@@ -102,43 +102,68 @@ window.findNQueensSolution = function(n) {
 
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
+// window.countNQueensSolutions = function(n) {
+//   var solution = new Board({n: n});
+//   var solutionCount = 0;
+//   var solutionFound = false;
+//   if (n === 0) {
+//     return 1;
+//   }
+
+//   var innerQueen = function(q, x, y) {
+//     if (q === 0) {
+//       solutionCount++;
+//       solutionFound = true;
+//       return;
+//     }
+//     if (!solution._isInBounds(y, x)) {
+//       x = x % n;
+//     }
+//     solution.togglePiece(y, x);
+//     if (solution.hasAnyQueensConflicts()) {
+//       solution.togglePiece(y, x);
+//       return;
+//     }
+//     x += 2;
+//     for (var j = 0; j < n; j++) {
+//       if (solutionFound) {
+//         solutionFound = false;
+//         break;
+//       }
+//       innerQueen(q - 1, x + j, y + 1);
+//     }
+//     solution.togglePiece(y, x - 2);
+//     return;
+//   };
+
+//   for (var i = 0; i < n; i++) {
+//     innerQueen(n, i, 0);
+//   }
+
+//   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
+//   return solutionCount;
+// };
+
 window.countNQueensSolutions = function(n) {
   var solution = new Board({n: n});
   var solutionCount = 0;
-  var solutionFound = false;
-  if (n === 0) {
-    return 1;
-  }
 
-  var innerQueen = function(q, x, y) {
-    if (q === 0) {
-      solutionCount++;
-      solutionFound = true;
+  var innerQueen = function(q) {
+    if (q === n) {
+      solutionCount ++;
       return;
     }
-    if (!solution._isInBounds(y, x)) {
-      x = x % n;
-    }
-    solution.togglePiece(y, x);
-    if (solution.hasAnyQueensConflicts()) {
-      solution.togglePiece(y, x);
-      return;
-    }
-    x += 2;
-    for (var j = 0; j < n; j++) {
-      if (solutionFound) {
-        solutionFound = false;
-        break;
+
+    for (let i = 0; i < n; i++) {
+      solution.togglePiece(q, i);
+      if (!solution.hasAnyQueensConflicts()) {
+        innerQueen(q+1);
       }
-      innerQueen(q - 1, x + j, y + 1);
+      solution.togglePiece(q, i);
     }
-    solution.togglePiece(y, x - 2);
-    return;
   };
 
-  for (var i = 0; i < n; i++) {
-    innerQueen(n, i, 0);
-  }
+  innerQueen(0);
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
